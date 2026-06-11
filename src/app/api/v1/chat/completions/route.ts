@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
   const parsed = chatCompletionSchema.safeParse(body)
   if (!parsed.success) {
-    const errorMsg = parsed.error?.errors?.[0]?.message || 'Invalid request format'
+    const errorMsg = parsed.error?.issues?.[0]?.message || 'Invalid request format'
     return NextResponse.json({ error: { message: errorMsg, type: 'invalid_request_error' } }, { status: 400 })
   }
 

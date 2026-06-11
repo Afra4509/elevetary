@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
   const parsed = createApiKeySchema.safeParse(body)
   if (!parsed.success) {
-    const errorMsg = parsed.error?.errors?.[0]?.message || 'Invalid request'
+    const errorMsg = parsed.error?.issues?.[0]?.message || 'Invalid request'
     return NextResponse.json({ error: errorMsg }, { status: 400 })
   }
 
