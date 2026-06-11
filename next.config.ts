@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     ]
   },
   experimental: {
+    instrumentationHook: true,
     serverActions: {
       allowedOrigins: ['localhost:3000', 'api.aeferalow.my.id'],
     },
