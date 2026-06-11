@@ -23,22 +23,18 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: npm install and build
+      - name: npm install, build, and test
         run: |
           npm install
           npx prisma generate
-          npm run build
-          
-          # Copy static files to the standalone directory to ensure server.js can serve them
-          mkdir -p .next/standalone/.next
-          cp -r .next/static .next/standalone/.next/
-          cp -r public .next/standalone/ || true
+          npm run build --if-present
+          npm run test --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .next/standalone
+          path: .
 
   deploy:
     runs-on: ubuntu-latest

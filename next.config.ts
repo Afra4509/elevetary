@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
       },
     ]
   },
-  output: 'standalone',
   experimental: {
     serverActions: {
       allowedOrigins: ['localhost:3000', 'api.aeferalow.my.id'],
