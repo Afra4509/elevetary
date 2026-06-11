@@ -34,7 +34,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: |
+            .next
+            public
+            package.json
+            package-lock.json
+            node_modules
+            prisma
 
   deploy:
     runs-on: ubuntu-latest
