@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String?
+  role         String   @default("user")
+  enabled      Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  apiKeys      ApiKey[]
+  requestLogs  RequestLog[]
+
+  @@map("users")
+}
+
+model ApiKey {
+  id             String    @id @default(cuid())
+  keyHash        String    @unique @map("key_hash")
+  keyPrefix      String    @map("key_prefix")
+  name           String    @default("Default Key")
+  ownerId        String    @map("owner_id")
+  quota          Int       @default(100000)
+  usedTokens     Int       @default(0) @map("used_tokens")
+  totalRequests  Int       @default(0) @map("total_requests")
+  rateLimit      Int       @default(60) @map("rate_limit")
+  ipWhitelist    String?   @map("ip_whitelist")
+  enabled        Boolean   @default(true)
+  expiresAt      DateTime? @map("expires_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  owner        User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  requestLogs  RequestLog[]
+
+  @@map("api_keys")
+}
+
+model RequestLog {
+  id               String   @id @default(cuid())
+  apiKeyId         String?  @map("api_key_id")
+  userId           String?  @map("user_id")
+  provider         String
+  model            String
+  promptTokens     Int      @default(0) @map("prompt_tokens")
+  completionTokens Int      @default(0) @map("completion_tokens")
+  totalTokens      Int      @default(0) @map("total_tokens")
+  status           String
+  statusCode       Int      @default(200) @map("status_code")
+  latencyMs        Int      @default(0) @map("latency_ms")
+  ipAddress        String?  @map("ip_address")
+  userAgent        String?  @map("user_agent")
+  errorMessage     String?  @map("error_message")
+  streaming        Boolean  @default(false)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  apiKey  ApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([apiKeyId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([provider])
+  @@map("request_logs")
+}
+
+model ProviderHealth {
+  id           String   @id @default(cuid())
+  provider     String   @unique
+  isOnline     Boolean  @default(true) @map("is_online")
+  latencyMs    Int      @default(0) @map("latency_ms")
+  successRate  Float    @default(100.0) @map("success_rate")
+  errorRate    Float    @default(0.0) @map("error_rate")
+  lastChecked  DateTime @default(now()) @map("last_checked")
+  totalChecks  Int      @default(0) @map("total_checks")
+  failedChecks Int      @default(0) @map("failed_checks")
+
+  @@map("provider_health")
+}
+
+model SystemConfig {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_config")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  actorId   String?  @map("actor_id")
+  actorRole String?  @map("actor_role")
+  targetId  String?  @map("target_id")
+  details   String?
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([actorId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
