@@ -136,46 +136,38 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
   const msgText = msg.replace(/^(success|error):/, '')
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
+    <div className="nb-mobile-stack" style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
       {/* Sidebar */}
-      <aside className="sidebar" style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '20px', borderBottom: '1px solid var(--border)' }}>
+      <aside className="nb-sidebar">
+        <div className="nb-sidebar-logo">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg, #7c3aed, #4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 700, color: 'white' }}>A</div>
             <div>
-              <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>Admin Panel</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Aeferalow API</div>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--nb-cream)' }}>Afra Panel</div>
+              <div style={{ fontSize: '0.7rem', color: '#9CA3AF' }}>Aeferalow API</div>
             </div>
           </div>
         </div>
 
-        <nav style={{ padding: '16px', flex: 1 }}>
+        <nav className="nb-sidebar-nav">
+          <div className="nb-sidebar-section">Menu</div>
           {tabs.map(({ id, label, Icon }) => (
-            <button key={id} onClick={() => setTab(id)} style={{
-              display: 'flex', alignItems: 'center', gap: '10px',
-              width: '100%', textAlign: 'left',
-              padding: '10px 12px', borderRadius: '8px', border: 'none',
-              background: tab === id ? 'var(--bg-card2)' : 'transparent',
-              color: tab === id ? 'var(--text)' : 'var(--text-muted)',
-              fontSize: '0.875rem', cursor: 'pointer', marginBottom: '4px',
-              borderLeft: tab === id ? '2px solid var(--accent)' : '2px solid transparent',
-              transition: 'all 0.15s',
-            }}>
+            <button key={id} onClick={() => setTab(id)} className={`nb-sidebar-item ${tab === id ? 'active' : ''}`} style={{ width: '100%', textAlign: 'left', background: tab === id ? undefined : 'transparent' }}>
               <Icon size={16} />
               {label}
             </button>
           ))}
         </nav>
 
-        <div style={{ padding: '16px', borderTop: '1px solid var(--border)' }}>
-          <button onClick={logout} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', fontSize: '0.8rem', padding: '8px', gap: '6px' }}>
-            <LogOut size={14} /> Sign Out
+        <div className="nb-sidebar-footer">
+          <button onClick={logout} className="nb-sidebar-item" style={{ width: '100%', justifyContent: 'center', background: 'transparent' }}>
+            <LogOut size={16} /> Sign Out
           </button>
         </div>
       </aside>
 
       {/* Main */}
-      <main style={{ marginLeft: '240px', flex: 1, padding: '32px', overflow: 'auto' }}>
+      <main style={{ marginLeft: 'var(--sidebar-width)', flex: 1, padding: '32px', overflow: 'auto', background: 'var(--nb-cream)' }}>
         {msg && (
           <div style={{
             marginBottom: '20px', padding: '12px 16px',
@@ -196,19 +188,19 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
             <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '8px' }}>Dashboard Overview</h1>
             <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>Platform statistics at a glance</p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+            <div className="nb-grid-stats" style={{ marginBottom: '32px' }}>
               {[
-                { label: 'Total Users', value: stats.totalUsers, color: 'var(--blue)', Icon: Users },
-                { label: 'Active Keys', value: stats.activeKeys, color: 'var(--green)', Icon: Key },
-                { label: 'Total Requests', value: stats.totalReqs, color: 'var(--accent-light)', Icon: Activity },
-                { label: 'Success', value: stats.successReqs, color: 'var(--green)', Icon: CheckCircle },
-                { label: 'Errors', value: stats.errorReqs, color: 'var(--red)', Icon: AlertTriangle },
+                { label: 'Total Users', value: stats.totalUsers, color: 'var(--nb-blue)', Icon: Users },
+                { label: 'Active Keys', value: stats.activeKeys, color: 'var(--nb-green)', Icon: Key },
+                { label: 'Total Requests', value: stats.totalReqs, color: 'var(--nb-purple)', Icon: Activity },
+                { label: 'Success', value: stats.successReqs, color: 'var(--nb-green)', Icon: CheckCircle },
+                { label: 'Errors', value: stats.errorReqs, color: 'var(--nb-red)', Icon: AlertTriangle },
               ].map(({ label, value, color, Icon }) => (
-                <div key={label} className="stat-card">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '10px' }}>
-                    <Icon size={13} color={color} /> {label}
+                <div key={label} className="nb-card" style={{ padding: '20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--nb-gray)', fontSize: '0.85rem', marginBottom: '12px', fontWeight: 600 }}>
+                    <Icon size={16} color={color} /> {label}
                   </div>
-                  <div style={{ fontSize: '1.75rem', fontWeight: 700, color }}>{value}</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 800, color }}>{value}</div>
                 </div>
               ))}
             </div>
@@ -218,16 +210,16 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {providerHealth.length === 0 ? (
-                <p style={{ color: 'var(--text-muted)' }}>No health data yet. Visit <a href="/status" style={{ color: 'var(--accent-light)' }}>/status</a> to trigger a check.</p>
+                <p style={{ color: 'var(--nb-gray)' }}>No health data yet. Visit <a href="/status" style={{ color: 'var(--nb-blue)' }}>/status</a> to trigger a check.</p>
               ) : providerHealth.map((p) => (
-                <div key={p.provider} className="glass" style={{ padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div key={p.provider} className="nb-card" style={{ padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span className={p.isOnline ? 'dot-online' : 'dot-offline'} />
-                    <span style={{ fontWeight: 500 }}>Provider {p.provider}</span>
+                    <span className={p.isOnline ? 'nb-dot nb-dot-green' : 'nb-dot nb-dot-red'} style={{ width: 10, height: 10, borderWidth: 2 }} />
+                    <span style={{ fontWeight: 600 }}>Provider {p.provider}</span>
                   </div>
-                  <div style={{ display: 'flex', gap: '24px', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                    <span>{p.latencyMs}ms</span>
-                    <span style={{ color: p.successRate >= 90 ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}>{Math.round(p.successRate)}% uptime</span>
+                  <div style={{ display: 'flex', gap: '24px', fontSize: '0.875rem', color: 'var(--nb-gray)' }}>
+                    <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>{p.latencyMs}ms</span>
+                    <span style={{ color: p.successRate >= 90 ? 'var(--nb-green-dark)' : 'var(--nb-red)', fontWeight: 800 }}>{Math.round(p.successRate)}% uptime</span>
                   </div>
                 </div>
               ))}
@@ -242,38 +234,38 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
               <Users size={22} /> Users
             </h1>
 
-            <div className="glass" style={{ padding: '24px', marginBottom: '24px' }}>
+            <div className="nb-card" style={{ padding: '24px', marginBottom: '24px' }}>
               <h2 style={{ fontWeight: 600, marginBottom: '16px', fontSize: '1rem' }}>Create User (Invite Only)</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-                <input className="input" placeholder="Email address" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
-                <input className="input" type="password" placeholder="Password (min 8 chars)" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
-                <input className="input" placeholder="Display name (optional)" value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} />
-                <select className="input" value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}>
+              <div className="nb-grid-stats" style={{ gap: '12px', marginBottom: '12px' }}>
+                <input className="nb-input" placeholder="Email address" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
+                <input className="nb-input" type="password" placeholder="Password (min 8 chars)" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
+                <input className="nb-input" placeholder="Display name (optional)" value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} />
+                <select className="nb-input" value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}>
                   <option value="user">User</option>
                   <option value="admin">Admin</option>
                 </select>
               </div>
-              <button onClick={createUser} disabled={loading} className="btn-primary" style={{ gap: '6px' }}>
+              <button onClick={createUser} disabled={loading} className="nb-btn nb-btn-primary" style={{ gap: '6px' }}>
                 <Plus size={16} /> Create User
               </button>
             </div>
 
-            <div className="glass" style={{ overflow: 'hidden' }}>
-              <table className="table">
+            <div className="nb-card" style={{ overflowX: 'auto', padding: '0' }}>
+              <table className="nb-table">
                 <thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
                 <tbody>
                   {users.map((u) => (
                     <tr key={u.id}>
                       <td style={{ fontWeight: 500 }}>{u.email}</td>
-                      <td style={{ color: 'var(--text-muted)' }}>{u.name ?? '—'}</td>
-                      <td><span className={`badge ${u.role === 'admin' ? 'badge-purple' : 'badge-yellow'}`}>{u.role}</span></td>
-                      <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{new Date(u.createdAt).toLocaleDateString()}</td>
+                      <td style={{ color: 'var(--nb-gray)' }}>{u.name ?? '—'}</td>
+                      <td><span className={`nb-badge ${u.role === 'admin' ? 'nb-badge-purple' : 'nb-badge-yellow'}`}>{u.role}</span></td>
+                      <td style={{ fontSize: '0.8rem', color: 'var(--nb-gray)' }}>{new Date(u.createdAt).toLocaleDateString()}</td>
                       <td>
                         <div style={{ display: 'flex', gap: '6px' }}>
-                          <button onClick={() => { setEditingUser(u); setEditUserForm({ role: u.role, password: '' }) }} className="btn-secondary" style={{ padding: '4px 10px', fontSize: '0.75rem', gap: '4px' }}>
+                          <button onClick={() => { setEditingUser(u); setEditUserForm({ role: u.role, password: '' }) }} className="nb-btn nb-btn-secondary nb-btn-sm" style={{ gap: '4px' }}>
                             <Edit size={12} /> Edit
                           </button>
-                          <button onClick={() => deleteUser(u.id)} className="btn-danger" style={{ padding: '4px 10px', fontSize: '0.75rem', gap: '4px' }}>
+                          <button onClick={() => deleteUser(u.id)} className="nb-btn nb-btn-red nb-btn-sm" style={{ gap: '4px' }}>
                             <Trash2 size={12} /> Delete
                           </button>
                         </div>
@@ -286,25 +278,25 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
 
             {editingUser && (
               <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-                <div className="glass" style={{ width: '400px', padding: '24px', position: 'relative' }}>
-                  <button onClick={() => setEditingUser(null)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+                <div className="nb-card" style={{ width: '400px', padding: '24px', position: 'relative' }}>
+                  <button onClick={() => setEditingUser(null)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'none', border: 'none', color: 'var(--nb-gray)', cursor: 'pointer' }}><X size={20} /></button>
                   <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '16px' }}>Edit User</h2>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '20px' }}>{editingUser.email}</p>
+                  <p style={{ color: 'var(--nb-gray)', fontSize: '0.875rem', marginBottom: '20px' }}>{editingUser.email}</p>
                   
                   <div style={{ marginBottom: '16px' }}>
-                    <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>Role</label>
-                    <select className="input" value={editUserForm.role} onChange={(e) => setEditUserForm({ ...editUserForm, role: e.target.value })}>
+                    <label style={{ fontSize: '0.75rem', color: 'var(--nb-gray)', marginBottom: '6px', display: 'block', fontWeight: 600 }}>Role</label>
+                    <select className="nb-input" value={editUserForm.role} onChange={(e) => setEditUserForm({ ...editUserForm, role: e.target.value })}>
                       <option value="user">User</option>
                       <option value="admin">Admin</option>
                     </select>
                   </div>
                   
                   <div style={{ marginBottom: '24px' }}>
-                    <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>New Password (leave blank to keep current)</label>
-                    <input className="input" type="password" placeholder="New password (min 8 chars)" value={editUserForm.password} onChange={(e) => setEditUserForm({ ...editUserForm, password: e.target.value })} />
+                    <label style={{ fontSize: '0.75rem', color: 'var(--nb-gray)', marginBottom: '6px', display: 'block', fontWeight: 600 }}>New Password (leave blank to keep current)</label>
+                    <input className="nb-input" type="password" placeholder="New password (min 8 chars)" value={editUserForm.password} onChange={(e) => setEditUserForm({ ...editUserForm, password: e.target.value })} />
                   </div>
                   
-                  <button onClick={saveUserEdit} disabled={loading} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Save Changes</button>
+                  <button onClick={saveUserEdit} disabled={loading} className="nb-btn nb-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Save Changes</button>
                 </div>
               </div>
             )}
@@ -318,49 +310,49 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
               <Key size={22} /> API Keys
             </h1>
 
-            <div style={{ marginBottom: '24px', padding: '16px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.3)', borderRadius: '8px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <Info size={20} color="var(--blue)" style={{ flexShrink: 0, marginTop: '2px' }} />
+            <div className="nb-card" style={{ marginBottom: '24px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <Info size={20} color="var(--nb-blue)" style={{ flexShrink: 0, marginTop: '2px' }} />
               <div>
-                <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--blue)', marginBottom: '4px' }}>Security Notice</h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text)', lineHeight: 1.5 }}>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--nb-blue)', marginBottom: '4px' }}>Security Notice</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--nb-black)', lineHeight: 1.5 }}>
                   For security reasons, full API keys are <strong>never stored</strong> in our database. We only store an irreversible cryptographic hash and the prefix (e.g. <code>afr_1234...</code>) to identify them. Therefore, you cannot view the full key after it is created. If a user loses their key, you must delete the old one and generate a new one.
                 </p>
               </div>
             </div>
 
-            <div className="glass" style={{ padding: '24px', marginBottom: '24px' }}>
+            <div className="nb-card" style={{ padding: '24px', marginBottom: '24px' }}>
               <h2 style={{ fontWeight: 600, marginBottom: '16px', fontSize: '1rem' }}>Create API Key</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-                <select className="input" value={newKeyTarget} onChange={(e) => setNewKeyTarget(e.target.value)}>
+              <div className="nb-grid-stats" style={{ gap: '12px', marginBottom: '16px' }}>
+                <select className="nb-input" value={newKeyTarget} onChange={(e) => setNewKeyTarget(e.target.value)}>
                   <option value="">Select User</option>
                   {users.map((u) => <option key={u.id} value={u.id}>{u.email}</option>)}
                 </select>
-                <input className="input" placeholder="Key Name" value={newKeyName} onChange={(e) => setNewKeyName(e.target.value)} />
+                <input className="nb-input" placeholder="Key Name" value={newKeyName} onChange={(e) => setNewKeyName(e.target.value)} />
                 <div>
-                  <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px', display: 'block' }}>Token Quota</label>
-                  <input className="input" type="number" value={newKeyQuota} onChange={(e) => setNewKeyQuota(Number(e.target.value))} min={1000} step={10000} />
+                  <label style={{ fontSize: '0.75rem', color: 'var(--nb-gray)', marginBottom: '4px', display: 'block', fontWeight: 600 }}>Token Quota</label>
+                  <input className="nb-input" type="number" value={newKeyQuota} onChange={(e) => setNewKeyQuota(Number(e.target.value))} min={1000} step={10000} />
                 </div>
                 <div>
-                  <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px', display: 'block' }}>Rate Limit (req/min)</label>
-                  <input className="input" type="number" value={newKeyRateLimit} onChange={(e) => setNewKeyRateLimit(Number(e.target.value))} min={1} max={1000} />
+                  <label style={{ fontSize: '0.75rem', color: 'var(--nb-gray)', marginBottom: '4px', display: 'block', fontWeight: 600 }}>Rate Limit (req/min)</label>
+                  <input className="nb-input" type="number" value={newKeyRateLimit} onChange={(e) => setNewKeyRateLimit(Number(e.target.value))} min={1} max={1000} />
                 </div>
               </div>
-              <button onClick={createKey} disabled={loading || !newKeyTarget} className="btn-primary" style={{ gap: '6px' }}>
+              <button onClick={createKey} disabled={loading || !newKeyTarget} className="nb-btn nb-btn-primary" style={{ gap: '6px' }}>
                 <RefreshCw size={16} /> Generate Key
               </button>
 
               {createdKey && (
-                <div style={{ marginTop: '16px', padding: '16px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--yellow)', marginBottom: '10px' }}>
+                <div className="nb-card" style={{ marginTop: '16px', padding: '16px', background: 'var(--nb-cream)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--nb-orange)', marginBottom: '10px', fontWeight: 600 }}>
                     <AlertTriangle size={14} /> Save this key now — it will NOT be shown again!
                   </div>
-                  <code style={{ fontFamily: 'monospace', fontSize: '0.875rem', wordBreak: 'break-all', color: 'var(--green)', display: 'block', background: 'var(--bg-card2)', padding: '10px 14px', borderRadius: '6px' }}>{createdKey}</code>
+                  <code style={{ fontFamily: 'monospace', fontSize: '1rem', wordBreak: 'break-all', color: 'var(--nb-green-dark)', display: 'block', fontWeight: 800 }}>{createdKey}</code>
                 </div>
               )}
             </div>
 
-            <div className="glass" style={{ overflowX: 'auto' }}>
-              <table className="table">
+            <div className="nb-card" style={{ overflowX: 'auto', padding: '0' }}>
+              <table className="nb-table">
                 <thead><tr><th>Prefix</th><th>Owner</th><th>Usage</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                   {apiKeys.map((k) => {
@@ -368,22 +360,22 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
                     return (
                       <tr key={k.id}>
                         <td><code style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}>{k.keyPrefix}</code></td>
-                        <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{k.owner.email}</td>
+                        <td style={{ color: 'var(--nb-gray)', fontSize: '0.85rem' }}>{k.owner.email}</td>
                         <td>
-                          <div style={{ fontSize: '0.8rem', marginBottom: '4px', fontVariantNumeric: 'tabular-nums' }}>
+                          <div style={{ fontSize: '0.8rem', marginBottom: '4px', fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>
                             {k.usedTokens.toLocaleString('en-US')} / {k.quota.toLocaleString('en-US')}
                           </div>
-                          <div style={{ background: 'var(--bg-card2)', borderRadius: '3px', height: '4px', width: '100px' }}>
-                            <div style={{ height: '100%', borderRadius: '3px', background: pct > 80 ? 'var(--red)' : 'var(--accent)', width: `${pct}%` }} />
+                          <div style={{ background: 'var(--nb-cream)', border: '1px solid var(--nb-black)', borderRadius: '0', height: '6px', width: '100px' }}>
+                            <div style={{ height: '100%', background: pct > 80 ? 'var(--nb-red)' : 'var(--nb-green)', width: `${pct}%`, borderRight: '1px solid var(--nb-black)' }} />
                           </div>
                         </td>
-                        <td><span className={`badge ${k.enabled ? 'badge-green' : 'badge-red'}`}>{k.enabled ? 'Active' : 'Suspended'}</span></td>
+                        <td><span className={`nb-badge ${k.enabled ? 'nb-badge-green' : 'nb-badge-red'}`}>{k.enabled ? 'Active' : 'Suspended'}</span></td>
                         <td>
                           <div style={{ display: 'flex', gap: '6px' }}>
-                            <button onClick={() => toggleKey(k.id, k.enabled)} className="btn-secondary" style={{ padding: '4px 10px', fontSize: '0.75rem', gap: '4px' }}>
+                            <button onClick={() => toggleKey(k.id, k.enabled)} className="nb-btn nb-btn-secondary nb-btn-sm" style={{ gap: '4px' }}>
                               {k.enabled ? <><Ban size={12} /> Suspend</> : <><CheckCircle size={12} /> Enable</>}
                             </button>
-                            <button onClick={() => deleteKey(k.id)} className="btn-danger" style={{ padding: '4px 10px', fontSize: '0.75rem', gap: '4px' }}>
+                            <button onClick={() => deleteKey(k.id)} className="nb-btn nb-btn-red nb-btn-sm" style={{ gap: '4px' }}>
                               <Trash2 size={12} /> Delete
                             </button>
                           </div>
@@ -403,19 +395,19 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
             <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <ScrollText size={22} /> Request Logs
             </h1>
-            <div className="glass" style={{ overflowX: 'auto' }}>
-              <table className="table">
+            <div className="nb-card" style={{ overflowX: 'auto', padding: '0' }}>
+              <table className="nb-table">
                 <thead><tr><th>Time</th><th>User</th><th>Provider</th><th>Model</th><th>Tokens</th><th>Latency</th><th>Status</th></tr></thead>
                 <tbody>
                   {logs.map((l) => (
                     <tr key={l.id}>
-                      <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{new Date(l.createdAt).toLocaleString()}</td>
-                      <td style={{ fontSize: '0.8rem' }}>{l.user?.email ?? '—'}</td>
-                      <td><span className="badge badge-purple">Provider {l.provider}</span></td>
-                      <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{l.model}</td>
-                      <td style={{ fontSize: '0.8rem', fontVariantNumeric: 'tabular-nums' }}>{l.totalTokens.toLocaleString('en-US')}</td>
-                      <td style={{ fontSize: '0.8rem', fontVariantNumeric: 'tabular-nums' }}>{l.latencyMs}ms</td>
-                      <td><span className={`badge ${l.status === 'success' ? 'badge-green' : 'badge-red'}`}>{l.status}</span></td>
+                      <td style={{ fontSize: '0.8rem', color: 'var(--nb-gray)', whiteSpace: 'nowrap' }}>{new Date(l.createdAt).toLocaleString()}</td>
+                      <td style={{ fontSize: '0.8rem', fontWeight: 600 }}>{l.user?.email ?? '—'}</td>
+                      <td><span className="nb-badge nb-badge-purple">Provider {l.provider}</span></td>
+                      <td style={{ fontSize: '0.8rem', color: 'var(--nb-gray)' }}>{l.model}</td>
+                      <td style={{ fontSize: '0.8rem', fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>{l.totalTokens.toLocaleString('en-US')}</td>
+                      <td style={{ fontSize: '0.8rem', fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>{l.latencyMs}ms</td>
+                      <td><span className={`nb-badge ${l.status === 'success' ? 'nb-badge-green' : 'nb-badge-red'}`}>{l.status}</span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -431,51 +423,54 @@ export default function AdminClient({ users, apiKeys, logs, stats, providerHealt
               <Settings size={22} /> Settings
             </h1>
 
-            <div className="glass" style={{ padding: '28px', marginBottom: '20px' }}>
-              <h2 style={{ fontWeight: 600, marginBottom: '8px' }}>Router Mode</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '20px' }}>Controls how traffic is distributed across providers.</p>
-              <div style={{ display: 'flex', gap: '12px', marginBottom: '28px', flexWrap: 'wrap' }}>
+            <div className="nb-card" style={{ padding: '28px', marginBottom: '20px' }}>
+              <h2 style={{ fontWeight: 800, marginBottom: '8px' }}>Router Mode</h2>
+              <p style={{ color: 'var(--nb-gray)', fontSize: '0.875rem', marginBottom: '20px', fontWeight: 500 }}>Controls how traffic is distributed across providers.</p>
+              <div style={{ display: 'flex', gap: '12px', marginBottom: '32px', flexWrap: 'wrap' }}>
                 {[
                   { mode: 'round-robin', desc: 'Even distribution' },
                   { mode: 'random', desc: 'Random selection' },
                   { mode: 'priority', desc: 'Priority cascade' },
                 ].map(({ mode, desc }) => (
                   <button key={mode} onClick={() => setRouterModeState(mode)} style={{
-                    padding: '12px 20px', borderRadius: '10px', border: '2px solid',
-                    borderColor: routerModeState === mode ? 'var(--accent)' : 'var(--border)',
-                    background: routerModeState === mode ? 'rgba(124,58,237,0.15)' : 'var(--bg-card2)',
-                    color: routerModeState === mode ? 'var(--accent-light)' : 'var(--text-muted)',
-                    cursor: 'pointer', fontWeight: 500, fontSize: '0.875rem', textTransform: 'capitalize',
-                    textAlign: 'left', transition: 'all 0.2s',
+                    padding: '16px 20px', borderRadius: '0', border: '2px solid',
+                    borderColor: 'var(--nb-black)',
+                    background: routerModeState === mode ? 'var(--nb-yellow)' : 'var(--nb-white)',
+                    color: 'var(--nb-black)',
+                    boxShadow: routerModeState === mode ? '4px 4px 0 var(--nb-black)' : 'none',
+                    transform: routerModeState === mode ? 'translate(-2px, -2px)' : 'none',
+                    cursor: 'pointer', fontWeight: 700, fontSize: '1rem', textTransform: 'capitalize',
+                    textAlign: 'left', transition: 'all 0.1s', minWidth: '180px'
                   }}>
                     <div>{mode}</div>
-                    <div style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '2px' }}>{desc}</div>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.8, marginTop: '4px', fontWeight: 500 }}>{desc}</div>
                   </button>
                 ))}
               </div>
 
-              <h2 style={{ fontWeight: 600, marginBottom: '16px' }}>Maintenance Mode</h2>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '28px' }}>
+              <h2 style={{ fontWeight: 800, marginBottom: '16px' }}>Maintenance Mode</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '32px' }}>
                 <button onClick={() => setMaintenance(!maintenance)} style={{
-                  width: '44px', height: '24px', borderRadius: '12px', border: 'none', cursor: 'pointer',
-                  background: maintenance ? 'var(--red)' : 'var(--border)', position: 'relative',
-                  transition: 'background 0.2s', flexShrink: 0,
+                  width: '48px', height: '28px', borderRadius: '0', border: '2px solid var(--nb-black)', cursor: 'pointer',
+                  background: maintenance ? 'var(--nb-red)' : 'var(--nb-white)', position: 'relative',
+                  transition: 'background 0.1s', flexShrink: 0,
+                  boxShadow: '2px 2px 0 var(--nb-black)'
                 }}>
                   <span style={{
-                    position: 'absolute', top: '3px', left: maintenance ? '23px' : '3px',
-                    width: '18px', height: '18px', borderRadius: '50%', background: 'white',
-                    transition: 'left 0.2s',
+                    position: 'absolute', top: '1px', left: maintenance ? '21px' : '1px',
+                    width: '22px', height: '22px', background: 'var(--nb-black)',
+                    transition: 'left 0.1s',
                   }} />
                 </button>
                 <div>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '6px', color: maintenance ? 'var(--red)' : 'var(--text)' }}>
-                    {maintenance ? <><ShieldAlert size={14} /> Maintenance is ON</> : 'Maintenance is OFF'}
+                  <div style={{ fontSize: '1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', color: maintenance ? 'var(--nb-red)' : 'var(--nb-black)' }}>
+                    {maintenance ? <><ShieldAlert size={16} /> Maintenance is ON</> : 'Maintenance is OFF'}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>When ON, all API calls return 503 Service Unavailable</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--nb-gray)', fontWeight: 500, marginTop: '4px' }}>When ON, all API calls return 503 Service Unavailable</div>
                 </div>
               </div>
 
-              <button onClick={saveConfig} className="btn-primary" style={{ gap: '6px' }}>
+              <button onClick={saveConfig} className="nb-btn nb-btn-primary" style={{ gap: '6px' }}>
                 <CheckCircle size={16} /> Save Settings
               </button>
             </div>

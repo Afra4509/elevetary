@@ -7,7 +7,7 @@ export default async function AdminPage() {
   const session = await getSession()
   if (!session || session.role !== 'admin') redirect('/login')
 
-  const [users, apiKeys, stats, logs, providerHealth] = await Promise.all([
+  const [users, apiKeys, statusCounts, logs, providerHealth, config] = await Promise.all([
     prisma.user.findMany({
       select: { id: true, email: true, name: true, role: true, enabled: true, createdAt: true },
       orderBy: { createdAt: 'desc' },
@@ -16,23 +16,24 @@ export default async function AdminPage() {
       include: { owner: { select: { email: true } } },
       orderBy: { createdAt: 'desc' },
     }),
-    Promise.all([
-      prisma.user.count(),
-      prisma.apiKey.count({ where: { enabled: true } }),
-      prisma.requestLog.count(),
-      prisma.requestLog.count({ where: { status: 'success' } }),
-      prisma.requestLog.count({ where: { status: 'error' } }),
-    ]),
+    prisma.requestLog.groupBy({
+      by: ['status'],
+      _count: { status: true },
+    }),
     prisma.requestLog.findMany({
       orderBy: { createdAt: 'desc' }, take: 50,
       include: { apiKey: { select: { keyPrefix: true } }, user: { select: { email: true } } },
     }),
     prisma.providerHealth.findMany(),
+    prisma.systemConfig.findMany()
   ])
 
-  const [totalUsers, activeKeys, totalReqs, successReqs, errorReqs] = stats
+  const totalUsers = users.length
+  const activeKeys = apiKeys.filter(k => k.enabled).length
+  const successReqs = statusCounts.find(s => s.status === 'success')?._count.status ?? 0
+  const errorReqs = statusCounts.find(s => s.status === 'error')?._count.status ?? 0
+  const totalReqs = successReqs + errorReqs
 
-  const config = await prisma.systemConfig.findMany()
   const configMap = Object.fromEntries(config.map((c) => [c.key, c.value]))
 
   return (

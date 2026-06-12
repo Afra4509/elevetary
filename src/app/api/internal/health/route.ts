@@ -69,7 +69,12 @@ export async function GET() {
     })
   )
 
-  const allHealth = await prisma.providerHealth.findMany()
+  let allHealth: any[] = []
+  try {
+    allHealth = await prisma.providerHealth.findMany()
+  } catch (e) {
+    console.error('Failed to fetch health stats from DB:', e)
+  }
 
   return NextResponse.json({
     checked_at: new Date().toISOString(),
@@ -77,10 +82,10 @@ export async function GET() {
       const health = allHealth.find((h) => h.provider === r.provider)
       return {
         ...r,
-        successRate: Math.round(health?.successRate ?? 100),
-        errorRate: Math.round(health?.errorRate ?? 0),
-        lastChecked: health?.lastChecked,
-        totalChecks: health?.totalChecks ?? 0,
+        successRate: Math.round(health?.successRate ?? (r.isOnline ? 100 : 0)),
+        errorRate: Math.round(health?.errorRate ?? (r.isOnline ? 0 : 100)),
+        lastChecked: health?.lastChecked ?? new Date(),
+        totalChecks: health?.totalChecks ?? 1,
       }
     }),
   })

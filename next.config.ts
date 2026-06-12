@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  // Prisma client runs on Node.js runtime only
+  serverExternalPackages: ['@prisma/client', 'bcryptjs'],
+
   async headers() {
     return [
       {
@@ -13,11 +16,21 @@ const nextConfig: NextConfig = {
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
         ],
       },
+      {
+        // CORS for public API
+        source: '/api/v1/(.*)',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET, POST, OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
+        ],
+      },
     ]
   },
+
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000', 'api.aeferalow.my.id'],
+      allowedOrigins: ['localhost:3000', 'api.aeferalow.my.id', '*.vercel.app'],
     },
   },
 }
