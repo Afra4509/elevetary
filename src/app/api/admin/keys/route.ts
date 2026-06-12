@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSessionFromRequest, isAdmin } from '@/lib/auth'
+import { getSession, isAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { generateApiKey, hashApiKey, getKeyPrefix } from '@/lib/apikey'
 import { createApiKeySchema } from '@/lib/security/validate'
 
 // GET /api/admin/keys — list all keys
 export async function GET(req: NextRequest) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/keys — create new key
 export async function POST(req: NextRequest) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSessionFromRequest } from '@/lib/auth'
+import { getSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 // GET /api/dashboard/me — session user info
 export async function GET(req: NextRequest) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -28,3 +28,4 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ data: user })
 }
+

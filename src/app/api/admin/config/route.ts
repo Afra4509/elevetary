@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSessionFromRequest, isAdmin } from '@/lib/auth'
+import { getSession, isAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 // GET /api/admin/config
 export async function GET(req: NextRequest) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
 // PUT /api/admin/config
 export async function PUT(req: NextRequest) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -43,3 +43,4 @@ export async function PUT(req: NextRequest) {
 
   return NextResponse.json({ success: true })
 }
+

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSessionFromRequest, isAdmin } from '@/lib/auth'
+import { getSession, isAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
@@ -13,7 +13,7 @@ const createUserSchema = z.object({
 
 // GET /api/admin/users
 export async function GET(req: NextRequest) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/users — invite/create user
 export async function POST(req: NextRequest) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -72,3 +72,4 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ success: true, data: user }, { status: 201 })
 }
+

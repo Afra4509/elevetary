@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSessionFromRequest, isAdmin } from '@/lib/auth'
+import { getSession, isAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 // PATCH /api/admin/keys/[id] — update (suspend/enable/change quota)
@@ -7,7 +7,7 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -43,7 +43,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!isAdmin(session)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }

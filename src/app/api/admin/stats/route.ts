@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSessionFromRequest } from '@/lib/auth'
+import { getSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { callProvider, PROVIDERS } from '@/lib/providers/base'
 
 // GET /api/admin/stats — overview stats for admin dashboard
 export async function GET(req: NextRequest) {
-  const session = await getSessionFromRequest(req)
+  const session = await getSession()
   if (!session) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -32,3 +32,4 @@ export async function GET(req: NextRequest) {
     avgLatencyMs: Math.round(avgLatency._avg.latencyMs ?? 0),
   })
 }
+
