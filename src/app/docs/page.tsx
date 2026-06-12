@@ -48,13 +48,13 @@ function Section({ id, title, children }: { id: string; title: string; children:
 
 export default function DocsPage() {
   const navLinks = [
-    { id: 'overview',      label: 'Overview' },
-    { id: 'authentication',label: 'Authentication' },
-    { id: 'chat',          label: 'Chat Completions' },
-    { id: 'models',        label: 'Models' },
-    { id: 'streaming',     label: 'Streaming' },
-    { id: 'rate-limits',   label: 'Rate Limits' },
-    { id: 'errors',        label: 'Error Codes' },
+    { id: 'overview', label: 'Overview' },
+    { id: 'authentication', label: 'Authentication' },
+    { id: 'chat', label: 'Chat Completions' },
+    { id: 'models', label: 'Models' },
+    { id: 'streaming', label: 'Streaming' },
+    { id: 'rate-limits', label: 'Rate Limits' },
+    { id: 'errors', label: 'Error Codes' },
   ]
 
   return (
@@ -96,7 +96,8 @@ export default function DocsPage() {
             padding: '24px 16px',
             position: 'sticky', top: 57, maxHeight: 'calc(100vh - 57px)', overflowY: 'auto',
           }}>
-          <style dangerouslySetInnerHTML={{__html: `
+          <style dangerouslySetInnerHTML={{
+            __html: `
             @media (max-width: 768px) {
               .docs-sidebar {
                 width: 100% !important;
@@ -148,7 +149,7 @@ export default function DocsPage() {
               Aeferalow API is an OpenAI-compatible gateway that routes requests across multiple AI providers
               with automatic failover, rate limiting, and usage tracking.
             </p>
-            <div className="nb-grid-stats" style={{ marginBottom: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: 20 }}>
               {[
                 ['Base URL', BASE_URL + '/v1'],
                 ['Protocol', 'HTTPS only'],
@@ -162,7 +163,7 @@ export default function DocsPage() {
                   borderRadius: 4,
                 }}>
                   <div style={{ fontSize: '0.7rem', fontFamily: 'Space Grotesk, sans-serif', fontWeight: 800, textTransform: 'uppercase', color: 'var(--nb-gray)', marginBottom: 4 }}>{k}</div>
-                  <code style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem' }}>{v}</code>
+                  <code style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', overflowWrap: 'anywhere' }}>{v}</code>
                 </div>
               ))}
             </div>
@@ -196,11 +197,11 @@ const client = new OpenAI({
                 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
                 <tbody>
                   {[
-                    ['model',       'string',  'Yes', 'Model ID (see Models section)'],
-                    ['messages',    'array',   'Yes', 'Array of {role, content} objects'],
-                    ['stream',      'boolean', 'No',  'Enable SSE streaming (default: false)'],
-                    ['temperature', 'number',  'No',  '0.0–2.0, controls randomness (default: 0.7)'],
-                    ['max_tokens',  'integer', 'No',  'Max tokens to generate (default: 4096)'],
+                    ['model', 'string', 'Yes', 'Model ID (see Models section)'],
+                    ['messages', 'array', 'Yes', 'Array of {role, content} objects'],
+                    ['stream', 'boolean', 'No', 'Enable SSE streaming (default: false)'],
+                    ['temperature', 'number', 'No', '0.0–2.0, controls randomness (default: 0.7)'],
+                    ['max_tokens', 'integer', 'No', 'Max tokens to generate (default: 4096)'],
                   ].map(([f, t, r, d]) => (
                     <tr key={f}>
                       <td><code className="nb-inline-code">{f}</code></td>
@@ -230,9 +231,9 @@ console.log(response.choices[0].message.content)`} />
             </p>
             <div className="nb-grid-stats" style={{ marginBottom: 20 }}>
               {[
-                { id: 'gpt-5-mini',  badge: 'Fast',   desc: 'Fastest response, best for simple tasks' },
-                { id: 'gpt-4o-mini', badge: 'Smart',  desc: 'Best balance of speed and intelligence' },
-                { id: 'gpt-5-chat',  badge: 'Pro',    desc: 'Most capable model for complex reasoning' },
+                { id: 'gpt-5-mini', badge: 'Fast', desc: 'Fastest response, best for simple tasks' },
+                { id: 'gpt-4o-mini', badge: 'Smart', desc: 'Best balance of speed and intelligence' },
+                { id: 'gpt-5-chat', badge: 'Pro', desc: 'Most capable model for complex reasoning' },
               ].map(m => (
                 <div key={m.id} style={{
                   padding: '14px 18px',
@@ -279,9 +280,9 @@ for await (const chunk of stream) {
                 <thead><tr><th>Header</th><th>Description</th></tr></thead>
                 <tbody>
                   {[
-                    ['X-RateLimit-Limit',     'Max requests per window'],
+                    ['X-RateLimit-Limit', 'Max requests per window'],
                     ['X-RateLimit-Remaining', 'Requests remaining in current window'],
-                    ['X-RateLimit-Reset',     'Unix timestamp when window resets'],
+                    ['X-RateLimit-Reset', 'Unix timestamp when window resets'],
                   ].map(([h, d]) => (
                     <tr key={h}>
                       <td><code className="nb-inline-code">{h}</code></td>
@@ -299,11 +300,11 @@ for await (const chunk of stream) {
                 <thead><tr><th>Code</th><th>Meaning</th><th>Solution</th></tr></thead>
                 <tbody>
                   {[
-                    ['400', 'Bad Request',        'Check your request body format'],
-                    ['401', 'Unauthorized',        'Provide a valid API key'],
-                    ['403', 'Forbidden',           'Key disabled or expired'],
+                    ['400', 'Bad Request', 'Check your request body format'],
+                    ['401', 'Unauthorized', 'Provide a valid API key'],
+                    ['403', 'Forbidden', 'Key disabled or expired'],
                     ['429', 'Rate Limit Exceeded', 'Slow down or upgrade your key limit'],
-                    ['500', 'Internal Error',      'All providers failed, retry later'],
+                    ['500', 'Internal Error', 'All providers failed, retry later'],
                     ['503', 'Service Unavailable', 'Circuit breakers open, retry in 30s'],
                   ].map(([code, meaning, solution]) => (
                     <tr key={code}>
